@@ -1,0 +1,27 @@
+web pack:
+npm i -D  webpack webpack-cli
+npm i -D html-webpack-plugin
+npm i -D webpack-dev-server
+
+typescript
+npm i -D typescript ts-loader
+npm i -D typescript-plugin-css-modules
+
+babel loader
+npm i -D babel-loader 
+npm install --save-dev @babel/plugin-proposal-class-properties
+npm i -D @babel/preset-env
+npm i -D @babel/preset-react
+npm install --save-dev @babel/preset-typescript
+npm i -D mini-css-extract-plugin
+npm i -D css-loader 
+
+react
+npm i -S react react-dom
+npm i -D @types/react @types/react-dom
+
+svg
+npm i -D @svgr/webpack 
+
+react-iconst
+npm i -S react-icons
