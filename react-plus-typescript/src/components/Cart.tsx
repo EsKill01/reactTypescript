@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {createRef} from 'react';
 import CartCSS from './Cart.module.css';
 import { FiShoppingCart } from 'react-icons/fi';
 import { AppStateContext } from './AppState';
@@ -13,11 +13,14 @@ interface State {
 }
 
 class Cart extends React.Component<Props, State> {
+    #conteinerRef: React.RefObject<HTMLDivElement>;
     constructor(props: Props){
         super(props);
         this.state = {
             isOpen: false,
         }
+    
+        this.#conteinerRef = createRef();
     }
 
 handlerClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -29,6 +32,20 @@ handlerClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     }
 }
 
+handleOutsideClick = (e: MouseEvent) => {
+     if (this.#conteinerRef.current && !this.#conteinerRef.current.contains(e.target as Node)){
+            this.setState({ isOpen: false });
+        }
+}
+
+componentDidMount() {
+    document.addEventListener('mousedown', this.handleOutsideClick);
+}
+
+componentWillUnmount() {
+    document.addEventListener('mousedown', this.handleOutsideClick)
+}
+
 render() {
     return (
         <AppStateContext.Consumer>{(state) => {
@@ -36,7 +53,7 @@ render() {
                 return sum + item.quantity;
             }, 0)
             return (
-            <div className={CartCSS.cartContainer}>
+            <div className={CartCSS.cartContainer} ref={this.#conteinerRef}>
             <button className={CartCSS.button} type="button" onClick={this.handlerClick} >
                 <FiShoppingCart />
                 <span>{itemsCount} pizza(s)</span>
