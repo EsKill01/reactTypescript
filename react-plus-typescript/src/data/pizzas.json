@@ -9,7 +9,8 @@
         "id": 2,
         "name": "Napoletana",
         "description": "Fresh tomatoes and mozzarella cheese",
-        "price": 14.99
+        "price": 10.99,
+        "specialOffer": true
     },
     {
         "id": 3,
