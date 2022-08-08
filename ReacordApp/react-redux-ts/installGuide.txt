@@ -1,0 +1,12 @@
+--Json server
+npm i -D json-server
+-Run de server
+npx json-server --watch json-server/db.json --port 3001
+--Concurrently
+npm i -D concurrently
+-Run
+npx concurrently -k "json-server --watch json-server/db.json --port 3001" "npm start"
+--React redux
+npm i -S redux react-redux
+npm install -S @types/react-redux
+

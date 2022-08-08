@@ -1,0 +1,16 @@
+{
+  "events": [
+    {
+      "id": 1,
+      "tittle": "Jogging",
+      "dateStart": "2022-08-08T17:39:57.792Z",
+      "dateEnd": "2022-08-08T18:39:57.792Z"
+    },
+    {
+      "tittle": "Type script",
+      "dateStart": "2022-08-08T17:39:57.792Z",
+      "dateEnd": "2022-08-08T18:39:57.792Z",
+      "id": 2
+    }
+  ]
+}
