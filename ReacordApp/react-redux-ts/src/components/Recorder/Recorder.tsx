@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectDateStart, start, stop } from "../redux/recorder";
+import { selectDateStart, start, stop } from "../../redux/recorder";
 import './Recorder.css';
 import cx from 'classnames';
 
