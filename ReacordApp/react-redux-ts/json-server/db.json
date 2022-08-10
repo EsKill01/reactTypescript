@@ -2,21 +2,21 @@
   "events": [
     {
       "id": 1,
-      "tittle": "Jogging",
+      "title": "Jogging",
       "dateStart": "2022-08-08T17:39:57.792Z",
       "dateEnd": "2022-08-08T18:39:57.792Z"
     },
     {
-      "tittle": "Type script",
+      "title": "Type script desde 0",
       "dateStart": "2022-08-08T17:39:57.792Z",
       "dateEnd": "2022-08-08T18:39:57.792Z",
       "id": 2
     },
     {
-      "tittle": "No name",
       "dateStart": "2022-08-10T01:28:23.240Z",
       "dateEnd": "2022-08-10T01:28:25.880Z",
-      "id": 4
+      "id": 4,
+      "title": "TS2"
     }
   ]
 }

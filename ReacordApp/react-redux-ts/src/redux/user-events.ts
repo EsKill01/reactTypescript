@@ -7,7 +7,7 @@ const api_url = `http://localhost:3001/events`;
 
 export interface UserEvent {
     id: number,
-    tittle: string,
+    title: string,
     dateStart: string,
     dateEnd: string
 }
@@ -23,6 +23,7 @@ export const selecUserEventsArray = (rootState: RootState) => {
     const state = selectUserEventsState(rootState);
 
     if(state){
+        // @ts-ignore
     return state.allIds.map(id => state.byIds[id]);
     }
     else{
@@ -52,8 +53,6 @@ interface LoadFailureAction extends Action<typeof LOAD_FAILURE>{
 }
 
 //#endregion
-
-//#region POST
 
 //#region Delete
 
@@ -102,7 +101,9 @@ DeleteRequestAction | DeleteSuccessRequestAction | DeleteErrorRequestAction> => 
     }
 }
 
-//#region 
+//#endregion
+
+//#region POST
 
 const CREATE_REQUEST = 'userEvents/create_request';
 
@@ -135,7 +136,7 @@ CreateRequestAction | SuccessRequestAction | ErrorRequestAction> => async (dispa
     try {
         const dateStart = selectDateStart(getState());
         const event: Omit<UserEvent, 'id'> = {
-            tittle: 'No name',
+            title: 'No name',
             dateStart,
             dateEnd: new Date().toISOString()
         }
@@ -166,8 +167,65 @@ CreateRequestAction | SuccessRequestAction | ErrorRequestAction> => async (dispa
 
 //#endregion
 
+//#region PUT
 
-const userEvenetsReducer = (state: UserEventsReducer = initialState, action: LoadSuccessAction | SuccessRequestAction | ErrorRequestAction | DeleteSuccessRequestAction) => {
+const EDIT_REQUEST = 'userEvents/edit_request';
+
+interface EditRequestAction extends Action<typeof EDIT_REQUEST> {};
+
+const EDIT_SUCCESS_REQUEST = 'userEvents/edit_success_request';
+
+interface EditSuccessRequestAction extends Action<typeof EDIT_SUCCESS_REQUEST> {
+    payload: {event: UserEvent}
+};
+
+const EDIT_ERROR_REQUEST = 'userEvents/edit_error_request';
+
+interface EditErrorRequestAction extends Action<typeof EDIT_ERROR_REQUEST> {
+    message: string
+};
+
+// @ts-ignore
+export const updateUserEvent = (event: UserEvent): 
+ThunkAction<Promise<void>, 
+RootState, 
+undefined, 
+EditRequestAction | EditSuccessRequestAction | EditErrorRequestAction> => async (dispatch) => {
+    dispatch({
+        type: EDIT_REQUEST
+    });
+
+    try{
+        console.log(event);
+        const response = await fetch(api_url+`/${event.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(event)
+        });
+
+        const updateEvent: UserEvent = await response.json();
+
+        dispatch({
+            type: EDIT_SUCCESS_REQUEST,
+            payload: {
+                event: updateEvent
+            }
+        });
+    }catch(e){
+        dispatch({
+            type: EDIT_ERROR_REQUEST,
+            message: 'Error traying to edit title'
+        });
+    }
+} 
+
+
+//#endregion
+
+// @ts-ignore
+const userEvenetsReducer = (state: UserEventsReducer = initialState, action: LoadSuccessAction | SuccessRequestAction | ErrorRequestAction | DeleteSuccessRequestAction | EditSuccessRequestAction) => {
     switch (action.type){
         case LOAD_SUCCESS:
             const {events} = action.payload;
@@ -195,6 +253,13 @@ const userEvenetsReducer = (state: UserEventsReducer = initialState, action: Loa
             delete newState.byIds[id];
             return newState;
 
+        case EDIT_SUCCESS_REQUEST:
+            const { event: updatedEvent } = action.payload;
+            return {...state,
+                    byIds: {
+                        ...state.byIds, [updatedEvent.id]: updatedEvent 
+                    }};
+
             
         default:
             return state;
@@ -208,7 +273,7 @@ export const loadUserEvents = (): ThunkAction<void, RootState, undefined, LoadRe
  });
 
  try{
-     const response = await fetch('http://localhost:3001/events');
+     const response = await fetch(api_url);
      const events: UserEvent[] = await response.json();
 
      dispatch({
