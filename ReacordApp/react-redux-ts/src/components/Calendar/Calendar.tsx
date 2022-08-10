@@ -4,6 +4,7 @@ import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "../../redux/store";
 import { selecUserEventsArray, loadUserEvents, UserEvent } from "../../redux/user-events";
 import { addZero } from '../../lib/utils';
+import EventItem from "./EventItem";
 
 const mapState = (state: RootState) => ({
     events: selecUserEventsArray(state)
@@ -64,7 +65,7 @@ const Calendar: React.FC<Props> = ({events, loadUserEvents}) =>{
     let groupedEvents: ReturnType<typeof groupEventsByDay> | undefined;
     let sortedGroupsKeys: string[] | undefined;
 
-    if (events.length) {
+    if (events && events.length) {
         groupedEvents = groupEventsByDay(events);
         sortedGroupsKeys = Object.keys(groupedEvents).sort(
             (date1, date2) => + new Date(date2) - +new Date(date1)
@@ -86,24 +87,8 @@ const Calendar: React.FC<Props> = ({events, loadUserEvents}) =>{
             <div className="calendar-events">
 
                 {events.map(event => {
-                    return(
-                        <div className="calendar-event">
-                            <div className="calendar-event-info">
-                                <div className="calendar-event-time">
-                                 1:00 - 2:00
-                                </div>
-                            <div className="calendar-event-title">
-                                 {event.tittle}
-                            </div>
-                        </div>
-                    <div className="calendar-event-delete-button">
-                        &times;
-                    </div>
-                </div>
-                    );
+                   return <EventItem key={`events${event.id}`} event={event} />
                 })}
-
-
               
             </div>
         </div>

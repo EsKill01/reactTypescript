@@ -3,6 +3,8 @@ import { ThunkAction } from "redux-thunk";
 import { selectDateStart } from "./recorder";
 import { RootState } from "./store";
 
+const api_url = `http://localhost:3001/events`;
+
 export interface UserEvent {
     id: number,
     tittle: string,
@@ -19,7 +21,13 @@ const selectUserEventsState = (rootState: RootState) => rootState.userEvents;
 
 export const selecUserEventsArray = (rootState: RootState) => {
     const state = selectUserEventsState(rootState);
+
+    if(state){
     return state.allIds.map(id => state.byIds[id]);
+    }
+    else{
+        return;
+    }
 };
 
 const initialState: UserEventsReducer = {
@@ -46,6 +54,55 @@ interface LoadFailureAction extends Action<typeof LOAD_FAILURE>{
 //#endregion
 
 //#region POST
+
+//#region Delete
+
+const DELETE_REQUEST = 'userEvent/delete_request';
+
+interface DeleteRequestAction extends Action<typeof DELETE_REQUEST> {};
+
+const DELETE_SUCCESS_REQUEST = 'userEvent/delete_success_request';
+
+interface DeleteSuccessRequestAction extends Action<typeof DELETE_SUCCESS_REQUEST> {
+    payload: {id: UserEvent['id']}
+};
+
+const DELETE_ERROR_REQUEST = 'userEvent/delete_error_request';
+
+interface DeleteErrorRequestAction extends Action<typeof DELETE_ERROR_REQUEST> {
+    message: string;
+};
+
+
+export const deleteUserEvent = (id: UserEvent['id']): ThunkAction<
+Promise<void>,
+RootState,
+undefined,
+DeleteRequestAction | DeleteSuccessRequestAction | DeleteErrorRequestAction> => async dispatch => {
+    dispatch({
+        type: DELETE_REQUEST
+    });
+    
+    try{
+        const response = await fetch(api_url+`/${id}`, {
+            method: 'DELETE'
+        });
+        
+        if (response.ok){
+            dispatch({
+                type: DELETE_SUCCESS_REQUEST,
+                payload: {id}
+            });
+        }
+    }catch (e){
+        dispatch({
+            type: DELETE_ERROR_REQUEST,
+            message: 'Error traying to delete event'
+        });
+    }
+}
+
+//#region 
 
 const CREATE_REQUEST = 'userEvents/create_request';
 
@@ -83,7 +140,7 @@ CreateRequestAction | SuccessRequestAction | ErrorRequestAction> => async (dispa
             dateEnd: new Date().toISOString()
         }
 
-        const response = await fetch(`http://localhost:3001/events`, {
+        const response = await fetch(api_url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -110,7 +167,7 @@ CreateRequestAction | SuccessRequestAction | ErrorRequestAction> => async (dispa
 //#endregion
 
 
-const userEvenetsReducer = (state: UserEventsReducer = initialState, action: LoadSuccessAction | SuccessRequestAction | ErrorRequestAction) => {
+const userEvenetsReducer = (state: UserEventsReducer = initialState, action: LoadSuccessAction | SuccessRequestAction | ErrorRequestAction | DeleteSuccessRequestAction) => {
     switch (action.type){
         case LOAD_SUCCESS:
             const {events} = action.payload;
@@ -128,6 +185,16 @@ const userEvenetsReducer = (state: UserEventsReducer = initialState, action: Loa
                 allIds: [...state.allIds, event.id],
                 byIds: {...state.byIds, [event.id]: event} 
             };
+
+        case DELETE_SUCCESS_REQUEST:
+            const { id } = action.payload;
+            const newState = {
+                ...state, byIds: {...state.byIds},
+                allIds: state.allIds.filter(storeId => storeId !== id)
+            };
+            delete newState.byIds[id];
+            return newState;
+
             
         default:
             return state;
