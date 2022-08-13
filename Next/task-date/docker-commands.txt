@@ -1,0 +1,3 @@
+Inicia el esquema
+
+docker exec -i task-date_db_1 sh -c "mysql -uroot -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE" < db/schema.sql

@@ -1,0 +1,9 @@
+npm install --save-dev @types/react @types/node
+
+npm i -S apollo-server-micro@2.x
+
+npm i -S serverless-mysql
+
+npm i --save graphql
+npm i --save-dev @graphql-codegen/cli
+npx graphql-codegen init
