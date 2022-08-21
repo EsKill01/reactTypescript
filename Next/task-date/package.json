@@ -10,18 +10,22 @@
     "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
-    "apollo-server-micro": "^2.25.4",
+    "@apollo/client": "^3.6.9",
+    "apollo-server-micro": "^2.26.0",
+    "fs": "^0.0.1-security",
     "graphql": "^15.8.0",
+    "net": "^1.0.2",
     "next": "12.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "serverless-mysql": "^1.5.4"
+    "serverless-mysql": "^1.5.4",
+    "tls": "^0.0.1"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "2.11.6",
-    "@graphql-codegen/typescript": "2.7.3",
-    "@graphql-codegen/typescript-operations": "2.5.3",
-    "@graphql-codegen/typescript-react-apollo": "3.3.3",
+    "@graphql-codegen/typescript": "^2.7.3",
+    "@graphql-codegen/typescript-operations": "^2.5.3",
+    "@graphql-codegen/typescript-react-apollo": "^3.3.3",
     "@graphql-codegen/typescript-resolvers": "^2.7.3",
     "@types/node": "^18.7.1",
     "@types/react": "^18.0.17",
